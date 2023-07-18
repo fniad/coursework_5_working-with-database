@@ -23,9 +23,9 @@ class HeadHunterAPI(VacancyAPI):
         self.headers = {'User-Agent': 'job_parser/1.0 (artkamproject@gmail.com)'}
         self.params = {
             'per_page': 100,
-            'page': None,
+            'page': 0,
             'archive': False,
-            'only_with_salary': True
+            # 'only_with_salary': True
         }
         self.vacancies = []
         self.companies = []
@@ -48,8 +48,16 @@ class HeadHunterAPI(VacancyAPI):
 
     def get_vacancies(self):
         """Получаем данные о вакансиях для каждой компании"""
+        dict_vacancies = []
         for company_id in self.company_ids:
-            url_vacancy = f"https://api.hh.ru/vacancies?employer_id={company_id}"
-            self.vacancies.append(self.get_request(url_vacancy)['items'])
-        dict_vacancies = [dict(item) for sublist in self.vacancies for item in sublist]
+            page = 0
+            while True:
+                self.params['page'] = page
+                url_vacancy = f"https://api.hh.ru/vacancies?employer_id={company_id}"
+                response = self.get_request(url_vacancy)
+                items = response['items']
+                dict_vacancies.extend(items)
+                if len(items) < self.params['per_page']:
+                    break
+                page += 1
         return dict_vacancies
