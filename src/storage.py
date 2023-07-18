@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import csv
+import json
 
 
 class Storage(ABC):
@@ -27,3 +28,14 @@ class CSVStorage(Storage):
             # Запись данных
             for row in self.data:
                 writer.writerow(row.values())
+
+
+class JSONStorage(Storage):
+    def __init__(self, data, name):
+        self.json_file = 'vacancies_hh_data/data' + f'_{name}' + '.json'
+        self.data = data
+
+    def save_data(self):
+        """Запись данных в файл JSON"""
+        with open(self.json_file, 'w') as file:
+            json.dump(self.data, file, indent=4, ensure_ascii=False)
