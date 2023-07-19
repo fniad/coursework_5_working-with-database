@@ -29,7 +29,7 @@
         "branded_description": null,
         "branding": null,
         "insider_interviews": [],
-        "open_vacancies": 15
+        "open_vacancies": 16
     },
     {
         "id": "856498",
@@ -43,8 +43,8 @@
         "vacancies_url": "https://api.hh.ru/vacancies?employer_id=856498",
         "logo_urls": {
             "original": "https://hhcdn.ru/employer-logo-original/1002934.png",
-            "240": "https://hhcdn.ru/employer-logo/5632517.png",
-            "90": "https://hhcdn.ru/employer-logo/5632516.png"
+            "90": "https://hhcdn.ru/employer-logo/5632516.png",
+            "240": "https://hhcdn.ru/employer-logo/5632517.png"
         },
         "relations": [],
         "area": {
@@ -65,7 +65,7 @@
         "branded_description": null,
         "branding": null,
         "insider_interviews": [],
-        "open_vacancies": 118
+        "open_vacancies": 117
     },
     {
         "id": "41138",
@@ -101,7 +101,7 @@
         "branded_description": null,
         "branding": null,
         "insider_interviews": [],
-        "open_vacancies": 10
+        "open_vacancies": 9
     },
     {
         "id": "1684993",
@@ -133,7 +133,7 @@
         "branded_description": null,
         "branding": null,
         "insider_interviews": [],
-        "open_vacancies": 9
+        "open_vacancies": 8
     },
     {
         "id": "5374297",
@@ -188,7 +188,7 @@
         "branded_description": null,
         "branding": null,
         "insider_interviews": [],
-        "open_vacancies": 9
+        "open_vacancies": 8
     },
     {
         "id": "78817",
@@ -201,8 +201,8 @@
         "alternate_url": "https://hh.ru/employer/78817",
         "vacancies_url": "https://api.hh.ru/vacancies?employer_id=78817",
         "logo_urls": {
-            "90": "https://hhcdn.ru/employer-logo/843746.jpeg",
             "240": "https://hhcdn.ru/employer-logo/843747.jpeg",
+            "90": "https://hhcdn.ru/employer-logo/843746.jpeg",
             "original": "https://hhcdn.ru/employer-logo-original/214430.jpg"
         },
         "relations": [],
@@ -277,8 +277,8 @@
         "alternate_url": "https://hh.ru/employer/3733050",
         "vacancies_url": "https://api.hh.ru/vacancies?employer_id=3733050",
         "logo_urls": {
-            "original": "https://hhcdn.ru/employer-logo-original/775081.png",
             "90": "https://hhcdn.ru/employer-logo/3541215.png",
+            "original": "https://hhcdn.ru/employer-logo-original/775081.png",
             "240": "https://hhcdn.ru/employer-logo/3541216.png"
         },
         "relations": [],
@@ -291,7 +291,7 @@
         "branded_description": null,
         "branding": null,
         "insider_interviews": [],
-        "open_vacancies": 5
+        "open_vacancies": 4
     },
     {
         "id": "41862",
@@ -331,6 +331,6 @@
             "template_version_id": "338283"
         },
         "insider_interviews": [],
-        "open_vacancies": 455
+        "open_vacancies": 450
     }
 ]

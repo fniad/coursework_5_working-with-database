@@ -1,6 +1,7 @@
 import json
 import psycopg2
 from config import config
+from src.cbr_currency import currency_transfer
 
 
 def connect_to_database(db_name: str):
@@ -49,8 +50,9 @@ def create_databases(params: dict, db_name: str) -> None:
             CREATE TABLE vacancies (
                 vacancy_id INT PRIMARY KEY,
                 vacancy_name VARCHAR(300) NOT NULL,
-                salary_from INT,
-                salary_to INT,
+                salary_from_in_rub INT,
+                salary_to_in_rub INT,
+                salary_in_currency VARCHAR,
                 salary_currency VARCHAR(50),
                 city VARCHAR(100),
                 url VARCHAR(300),
@@ -93,7 +95,8 @@ def load_data_to_table_companies(conn, cur):
 
                 cur.execute(
                     """
-                    INSERT INTO companies (company_id, company_name, site_url, hh_url, hh_vacancies_url, area, count_open_vacancies, description)
+                    INSERT INTO companies (company_id, company_name, site_url, hh_url, hh_vacancies_url, area, 
+                    count_open_vacancies, description)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                     """,
                     (company_id, company_name, site_url, hh_url, hh_vacancies_url, area, count_open_vacancies,
@@ -109,6 +112,7 @@ def load_data_to_table_companies(conn, cur):
 
 def load_data_to_table_vacancies(conn, cur):
     """ Загрузка данных в таблицу vacancies """
+    data_currency = currency_transfer()
     try:
         with open('vacancies_hh_data/data_vacancies.json') as file:
             json_data = json.load(file)
@@ -116,23 +120,37 @@ def load_data_to_table_vacancies(conn, cur):
             for vacancy in json_data:
                 vacancy_id = int(vacancy['id'])
                 vacancy_name = vacancy['name']
-                salary_from = 0 if vacancy['salary'] is None or vacancy['salary']['from'] is None or vacancy['salary']['from'] == 'null' else vacancy['salary']['from']
-                salary_to = salary_from if vacancy['salary'] is None or vacancy['salary']['to'] is None else vacancy['salary']['to']
+
+                currency_to_rub = data_currency.get('RUR') if vacancy['salary'] is None \
+                    or vacancy['salary']['currency'] is None \
+                    else data_currency.get(vacancy['salary']['currency'])
+
+                salary_from = 0 if vacancy['salary'] is None or vacancy['salary']['from'] is None or vacancy['salary'][
+                    'from'] == 'null' else vacancy['salary']['from']
+                salary_from_in_rub = salary_from * currency_to_rub
+
+                salary_to = salary_from if vacancy['salary'] is None or vacancy['salary']['to'] is None else \
+                    vacancy['salary']['to']
+                salary_to_in_rub = salary_to * currency_to_rub
+
+                salary_in_currency = f'{salary_from} - {salary_to}'
                 salary_currency = vacancy['salary']['currency'] if vacancy['salary'] is not None else None
+
                 city = vacancy['address']['city'] if vacancy['address'] is not None else None
                 url = vacancy['alternate_url']
-                employer_id = int(vacancy['employer']['id']) # связь с таблицей companies: company_id
+                employer_id = int(vacancy['employer']['id'])  # связь с таблицей companies: company_id
                 responsibility = vacancy['snippet']['responsibility']
                 experience = vacancy['experience']['name']
                 employment = vacancy['employment']['name']
 
                 cur.execute(
                     """
-                    INSERT INTO vacancies (vacancy_id, vacancy_name, salary_from, salary_to, salary_currency, city, url, employer_id, responsibility, experience, employment)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s,  %s, %s, %s)
+                    INSERT INTO vacancies (vacancy_id, vacancy_name, salary_from_in_rub, salary_to_in_rub, 
+                    salary_currency, salary_in_currency, city, url, employer_id, responsibility, experience, employment)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """,
-                    (vacancy_id, vacancy_name, salary_from, salary_to,
-                     salary_currency, city, url, employer_id, responsibility, experience, employment))
+                    (vacancy_id, vacancy_name, salary_from_in_rub, salary_to_in_rub, salary_currency,
+                     salary_in_currency, city, url, employer_id, responsibility, experience, employment))
 
             # Зафиксировать изменения в базе данных
             conn.commit()
